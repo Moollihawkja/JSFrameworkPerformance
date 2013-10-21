@@ -1,0 +1,47 @@
+<html>
+<head>
+	<title>Bulk Manager</title>
+	<script src="/lib/jquery_2.0.3.js"></script>
+</head>
+<body>
+	<button id="bulkAdd">	Add</button>
+	<button id="bulkRead">Read</button>
+	<button id="bulkDelete">Delete</button>
+	<div id="results"></div>
+	<script>
+	$(function(){
+
+		$("#bulkAdd").click(function() {
+			var arr = [],
+				leadingZeros = ["", "0", "00", "000"]
+			for (var i = 0; i < 2000; i++) {
+				var len = i.toString().length,
+					pre = leadingZeros[4 -len],
+					prei = pre + i
+				;
+				arr.push({
+					name: 'Test Name ' + prei,
+					department: 'Test Department ' + prei
+				})
+			}
+			console.log(arr);
+			$.post("/api/bulk/bulkcreate",{data:  arr}, function(data){
+				$("#results").text(JSON.stringify(data));
+			});
+		});
+
+		$("#bulkDelete").click(function(){
+			$.post("/api/bulk/bulkdelete",{}, function(data){
+				$("#results").text(JSON.stringify(data));
+			});
+		})
+
+		$("#bulkRead").click(function() {
+			$.get("/api/bulk/list", function(data){
+				$("#results").text(JSON.stringify(data));
+			});
+		});
+	});
+	</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>KO Performance</title>
+	<script src="/lib/jquery_2.0.3.js"></script>
+	<script src="/lib/ko_v2.3.0.js"></script>
+</head>
+<body>
+	<div id="loading" >
+		Running Test...
+	</div>
+	<div id="results" >
+		<table>
+			<tr><td>Total number of items in test: </td><td id="itemResult"></td></tr>
+			<tr><td>Total number of milliseconds: </td><td id="timeResult"></td></tr>
+		</table>
+	</div>
+	<div id="items">
+		<!-- ko foreach: $root -->
+		<hr/>
+		<div>
+			<div data-bind="text: name"></div>
+			<div data-bind="text: department"></div>
+		</div>
+		<!-- /ko -->
+	</div>
+
+	<script>
+		$(function() {
+			$("#results").hide();
+			$("#loading").show();
+			$.get("/api/bulk/list", function(data){
+				var startTime = new Date().getTime();
+				ko.applyBindings(data, $("items")[0]);
+				var endTime = new Date().getTime();
+				$("#itemResult").text(data.length);
+				$("#timeResult").text(endTime - startTime);
+				$("#results").show();
+				$("#loading").hide();
+			});
+
+		});
+	</script>
+</body>
+</html>
