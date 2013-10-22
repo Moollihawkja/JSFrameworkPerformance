@@ -1,0 +1,50 @@
+<html ng-app="ContactModule">
+<head>
+	<title>NG Performance</title>
+	<script src="/lib/jquery_2.0.3.js"></script>
+	<script src="/lib/ng_v1.0.8.js"></script>
+</head>
+<body>
+	<div id="loading" >
+		Running Test...
+	</div>
+	<div id="results" >
+		<table>
+			<tr><td>Total number of items in test: </td><td id="itemResult"></td></tr>
+			<tr><td>Total number of milliseconds: </td><td id="timeResult"></td></tr>
+		</table>
+	</div>
+	<div ng-controller="ContactController">
+		<div ng-repeat="contact in contacts">
+			<hr/>
+			<div>{{ contact.name }}</div>
+			<div>{{ contact.department }}</div>
+		</div>
+	</div>
+
+	<script>
+		$("#results").hide();
+		$("#loading").show();
+		var ContactModule = angular.module("ContactModule", [])
+			.factory('ContactFactory',function($http) {
+				return {
+					loadContacts: function() { return $http.get('/api/bulk/list'); }
+				}
+			})
+			.controller('ContactController', ['$scope', 'ContactFactory',  function($scope, ContactFactory){
+				ContactFactory.loadContacts().then(function(result) {
+					var startTime = new Date().getTime();
+					$scope.contacts = result.data;
+					setTimeout(function() {
+						var endTime = new Date().getTime();
+						$("#itemResult").text(result.data.length);
+						$("#timeResult").text(endTime - startTime);
+						$("#results").show();
+						$("#loading").hide();
+					}, 0)
+				});
+			}])
+		;
+	</script>
+</body>
+</html>

@@ -31,11 +31,13 @@
 			$.get("/api/bulk/list", function(data){
 				var startTime = new Date().getTime();
 				ko.applyBindings(data, $("items")[0]);
-				var endTime = new Date().getTime();
-				$("#itemResult").text(data.length);
-				$("#timeResult").text(endTime - startTime);
-				$("#results").show();
-				$("#loading").hide();
+				setTimeout(function(){
+					var endTime = new Date().getTime();
+					$("#itemResult").text(data.length);
+					$("#timeResult").text(endTime - startTime);
+					$("#results").show();
+					$("#loading").hide();
+				}, 0);
 			});
 
 		});
