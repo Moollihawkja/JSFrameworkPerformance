@@ -30,6 +30,7 @@
 			$("#loading").show();
 			$.get("/api/bulk/list", function(data){
 				var startTime = new Date().getTime();
+				console.log(JSON.stringify(data));
 				ko.applyBindings(data, $("items")[0]);
 				setTimeout(function(){
 					var endTime = new Date().getTime();
